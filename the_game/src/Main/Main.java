@@ -1,9 +1,10 @@
-package main;
+package Main;
 
 public class Main {
 
     public static void main(String[] args) {
-        
-       MyFrame MyFrame = new MyFrame();
+        Game game = new Game();
+        game.start();
     }
 }
+
