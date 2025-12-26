@@ -8,30 +8,21 @@ public abstract class Unit {
     protected int hp;
     protected int maxHp;
     protected int attack;
+    protected int defense;
     protected int cost;
 
     protected Random random = new Random();
 
-    public Unit(String name, int hp, int attack, int cost) {
+    public Unit(String name, int hp, int attack, int defense, int cost) {
         this.name = name;
         this.hp = hp;
         this.maxHp = hp;
         this.attack = attack;
+        this.defense = defense;
         this.cost = cost;
     }
 
-    // Default attack behavior (for combat units)
-    public void attack(Unit target) {
-        int randomFactor = random.nextInt(3) + 1;
-        int damage = this.attack * randomFactor;
-
-        System.out.println(
-            this.name + " attacks " + target.name +
-            " for " + damage + " damage."
-        );
-
-        target.takeDamage(damage);
-    }
+    public abstract void attack(Unit target);
 
     public void takeDamage(int damage) {
         hp -= damage;
@@ -55,4 +46,5 @@ public abstract class Unit {
 
     public int getHp() { return hp; }
     public int getMaxHp() { return maxHp; }
+    public int getDefense() { return defense; }
 }
