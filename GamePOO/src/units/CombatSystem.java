@@ -1,5 +1,6 @@
 package units;
 
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,13 @@ public class CombatSystem {
             System.out.println(target.getType() + " has been defeated.");
             units.remove(target);
         }
+        public void getTileImage() {
+            try { }}
+        
+        public void draw(Graphics2D g2) {
+            for (Unit unit : units) {
+                unit.draw(g2); // unit decides if it draws
+            }
     }
 
     public List<Unit> getUnits() {

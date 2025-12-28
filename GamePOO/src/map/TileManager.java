@@ -55,7 +55,7 @@ public class TileManager {
             InputStream is = getClass().getResourceAsStream(filePath);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-            int col = 0;
+            int col = 0;  
             int row = 0;
 
             while (col < gp.maxScreenCol && row < gp.maxScreenRow) {
