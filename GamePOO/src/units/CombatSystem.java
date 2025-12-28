@@ -35,7 +35,7 @@ public class CombatSystem {
             units.remove(target);
         }
         public void getTileImage() {
-            try { }}
+            }
         
         public void draw(Graphics2D g2) {
             for (Unit unit : units) {
