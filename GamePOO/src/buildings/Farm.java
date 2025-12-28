@@ -1,20 +1,24 @@
 package buildings;
-
+import resources.ResourceManager;
+import resources.ResourceType;
 
 public class Farm extends Building {
-    
+    private ResourceManager manager;
     private int foodProduction;
     
-    public Farm() {
-        super("Ferme", 50);
+    public Farm(ResourceManager manager) {
+        super("Farm", 50);
         this.foodProduction = 20;
+        this.manager = manager;
     }
-    
-    public void produce( Building Building) {
-        System.out.println(getName() + " produit " + foodProduction + " nourriture " );
+    @Override
+    public void produce() {
+        System.out.println(getName() + " produced " + foodProduction + " food.");
+        manager.addResource(ResourceType.FOOD, foodProduction);
     }
     
     public int getFoodProduction() {
         return foodProduction;
     }
+
 }

@@ -1,6 +1,5 @@
 package buildings;
 
-
 public abstract class Building {
     
     protected String name;
@@ -20,9 +19,10 @@ public abstract class Building {
     }
     
     // methode abstraite
-    public abstract void produce(Building Building);
+    public abstract void produce();
     
     public String toString() {
         return name + " (cout: " + cost + ")";
     }
+
 }

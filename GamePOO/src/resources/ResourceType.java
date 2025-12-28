@@ -1,5 +1,6 @@
 package resources;
 
-public class ResourceType {
-
+public enum ResourceType{
+	GOLD,
+	FOOD
 }

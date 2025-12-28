@@ -22,7 +22,6 @@ public class Soldier extends Unit {
 
         target.takeDamage(damage);
     }
-
     @Override
     public String getType() {
         return "Soldier";

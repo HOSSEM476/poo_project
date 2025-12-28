@@ -41,6 +41,9 @@ public class TileManager {
       
             tile[4] = new Tile();
             tile[4].image = ImageIO.read(getClass().getResourceAsStream("/map/tree.jpg"));
+ 
+            tile[5] = new Tile();
+            tile[5].image = ImageIO.read(getClass().getResourceAsStream("/map/earth.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,6 +97,7 @@ public class TileManager {
             g2.drawImage(tile[tileNum].image, x, y, gp.tileSize, gp.tileSize, null);
             col++;
             x += gp.tileSize;
+            
 
             if(col == gp.maxScreenCol) {
                 col = 0;
