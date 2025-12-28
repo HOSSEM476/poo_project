@@ -5,12 +5,12 @@ public class Barracks extends Building {
     private String unitType;
     
     public Barracks() {
-        super("Caserne", 150);
-        this.unitType = "Soldat";
+        super("Barrack", 150);
+        this.unitType = "Soldier";
     }
     
-    public void produce(Building Building) {
-        System.out.println(getName() + " entraine des " + unitType );
+    public void produce(){
+        System.out.println(getName() + " trains a " + unitType );
     }
     
     public String getUnitType() {
