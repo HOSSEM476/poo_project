@@ -1,17 +1,17 @@
+package buildings;
+public class Magetower extends Building {
 
-public class MageTower extends Building {
-    
     private String unitType;
-    
-    public MageTower() {
-        super("Tour de Magie", 200);
-        this.unitType = "Magicien";
+
+    public Magetower() {
+        super("Mage Tower", 200);
+        this.unitType = "Mage";
     }
-    
+
     public void produce() {
-        System.out.println(getName() + " entraine des " + unitType + " pour " + player.getName());
+        System.out.println(getName() + " trains " + unitType + " for ");
     }
-    
+
     public String getUnitType() {
         return unitType;
     }
