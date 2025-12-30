@@ -17,9 +17,9 @@ public abstract class Unit {
     protected Random random = new Random();
 
     // Drawing-related variables
-    protected BufferedImage image;
-    protected int x, y;
-    protected int tileSize;
+    public BufferedImage image;
+    public int x, y;
+    public int tileSize;
 
     // Constructor
     public Unit(String name, int hp, int attack, int defense, int cost) {
