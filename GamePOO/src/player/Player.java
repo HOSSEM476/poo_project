@@ -2,84 +2,103 @@ package player;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import GamePanelAndFrame.GamePanel;
 import buildings.Building;
-import map.Tile;
+import resources.ResourceType;
 import resources.ResourceManager;
 import units.Unit;
 
 public class Player {
-		private int HP;
-	    private List<Unit> units;
-	    private int gold;
-	    private List<Building> buildings;
-	    private ResourceManager resourceManager;
 
+    private GamePanel g;          // reference to GamePanel
+    private int pts;
+    private List<Unit> units;
+    private List<Building> buildings;
+    private ResourceManager resourceManager;
+    private boolean isAi;
 
-	    public Player() {
-	        this.units = new ArrayList<>();
-	        this.gold = 100; 
-	    }
-	    
+    // Constructor
+    public Player(boolean isAi, GamePanel g) {
+        this.units = new ArrayList<>();
+        this.buildings = new ArrayList<>();
+        this.resourceManager = new ResourceManager();
+        this.pts = 0;
+        this.isAi = isAi;
+        this.g = g;
+    }
 
-	    public void startTurn() {
-	        System.out.println("player's turn has started.");
-	    }
+    public void startTurn() {
+        g.addCommentary((isAi ? "AI" : "Player") + "'s turn has started.");
+        collectResources();
+    }
 
-	    public void endTurn() {
-	        System.out.println("player's turn has ended.");
-	    }
+    public void endTurn() {
+        g.addCommentary((isAi ? "AI" : "Player") + "'s turn has ended.");
+    }
 
-	    public void trainUnit(Unit unit) {
-	        units.add(unit);
-	    }
-	    public void addBuilding(Building building) {
-	        buildings.add(building);
-	    }
+    public void trainUnit(Unit unit) {
+        units.add(unit);
+        g.addCommentary((isAi ? "AI" : "Player") +
+                " trained a " + unit.getName());
+    }
 
-	    public void collectResources() {
-	        //resourceManager.produce(buildings);
-	    }
+    public void onEnemyUnitKilled(Unit enemy) {
+        pts += 1;
+        g.addCommentary("Enemy unit killed! Points: " + pts);
+    }
 
+    public void addBuilding(Building building) {
+        buildings.add(building);
+        g.addCommentary((isAi ? "AI" : "Player") +
+                " built a " + building.getClass().getSimpleName());
+    }
 
-	    public List<Unit> getUnits() {
-	        return units;
-	    }
+    public void collectResources() {
+        for (Building building : buildings) {
+            building.produce();
+        }
+        g.addCommentary((isAi ? "AI" : "Player") +
+                " collected resources.");
+    }
 
-	    public int getGold() {
-	        return gold;
-	    }
-	    public List<Building> getBuildings() {
-	        return buildings;
-	    }
+    public List<Unit> getUnits() {
+        return units;
+    }
 
-	    public ResourceManager getResourceManager() {
-	        return resourceManager;
-	    }
+    public List<Building> getBuildings() {
+        return buildings;
+    }
 
-	    public void addGold(int amount) {
-	        gold += amount;
-	    }
+    public void addGold(int amount) {
+        resourceManager.addResource(ResourceType.GOLD, amount);
+    }
 
-	    public void spendGold(int amount) {
-	        if (gold >= amount) {
-	            gold -= amount;
-	        }else {
-	        	System.out.println("Unsufficient funds!");	    }
-	}
-		public void deployUnit(Unit unit, Tile targetTile) {
-			
-		};
-		public int getHP() {
-			return HP;
-		}
-		public boolean isDefeated() {
-			if(getHP() == 0) {
-				return true;
-			}else {
-				return false;
-			}
-		}
+    public boolean spendGold(int amount) {
+        return resourceManager.spendResource(ResourceType.GOLD, amount);
+    }
 
+    public int getGold() {
+        return resourceManager.getResource(ResourceType.GOLD);
+    }
 
-		
+    public boolean isAi() {
+        return isAi;
+    }
+
+    public int getPoints() {
+        return pts;
+    }
+
+    public ResourceManager getResourceManager() {
+        return resourceManager;
+    }
+
+    public int getFood() {
+        return resourceManager.getResource(ResourceType.FOOD);
+    }
+
+    public boolean spendFood(int amount) {
+        return resourceManager.spendResource(ResourceType.FOOD, amount);
+    }
 }

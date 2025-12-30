@@ -1,4 +1,4 @@
-package units;
+/*package units;
 
 public class Wizard extends Unit {
 
@@ -27,4 +27,4 @@ public class Wizard extends Unit {
     public String getType() {
         return "Wizard";
     }
-}
+}*/

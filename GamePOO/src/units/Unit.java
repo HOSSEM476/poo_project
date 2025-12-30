@@ -6,7 +6,7 @@ import java.util.Random;
 
 public abstract class Unit {
 
-    // ✅ Stats
+    // Stats
     protected String name;
     protected int hp;
     protected int maxHp;
@@ -16,12 +16,12 @@ public abstract class Unit {
 
     protected Random random = new Random();
 
-    // ✅ Drawing-related variables
-    protected BufferedImage image;  // the unit’s image
-    protected int x, y;             // position in pixels
-    protected int tileSize;         // size to draw the unit
+    // Drawing-related variables
+    protected BufferedImage image;
+    protected int x, y;
+    protected int tileSize;
 
-    // ✅ Constructor for stats
+    // Constructor
     public Unit(String name, int hp, int attack, int defense, int cost) {
         this.name = name;
         this.hp = hp;
@@ -31,7 +31,7 @@ public abstract class Unit {
         this.cost = cost;
     }
 
-    // ✅ Optional: set drawing info
+    // Drawing setup
     public void setImage(BufferedImage image) {
         this.image = image;
     }
@@ -45,11 +45,11 @@ public abstract class Unit {
         this.tileSize = tileSize;
     }
 
-    // ✅ Abstract methods for subclasses
+    // Abstract methods
     public abstract void attack(Unit target);
     public abstract String getType();
 
-    // ✅ Stats methods
+    // Gameplay methods
     public void takeDamage(int damage) {
         hp -= damage;
         if (hp < 0) hp = 0;
@@ -64,14 +64,35 @@ public abstract class Unit {
         return hp > 0;
     }
 
-    public int getHp() { return hp; }
-    public int getMaxHp() { return maxHp; }
-    public int getDefense() { return defense; }
+    // Getters
+    public int getCost() {
+        return cost;
+    }
 
-    // ✅ Drawing method
+    public String getName() {
+        return name;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public int getDefense() {
+        return defense;
+    }
+
+    // Drawing
     public void draw(Graphics2D g2) {
-        if (!isAlive()) return;      // only draw alive units
-        if (image != null) {         // check image exists
+        if (!isAlive()) return;
+        if (image != null) {
             g2.drawImage(image, x, y, tileSize, tileSize, null);
         }
     }

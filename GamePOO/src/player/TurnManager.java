@@ -1,27 +1,26 @@
 package player;
 
-import java.util.List;
-
 public class TurnManager {
-    private List<Player> players;
-    private int currentPlayerIndex;
+    private Player player1;
+    private Player player2;
+    private boolean isPlayer1Turn;
 
-    public TurnManager(List<Player> players) {
-        this.players = players;
-        this.currentPlayerIndex = 0;
+    public TurnManager(Player player1, Player player2) {
+        this.player1 = player1;
+        this.player2 = player2;
+        this.isPlayer1Turn = true;
     }
-
-    public void startGame() {
-        players.get(currentPlayerIndex).startTurn();
+	public void startGame() {
+        getCurrentPlayer().startTurn();
     }
 
     public void nextTurn() {
-        players.get(currentPlayerIndex).endTurn();
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        players.get(currentPlayerIndex).startTurn();
+        getCurrentPlayer().endTurn();
+        isPlayer1Turn = !isPlayer1Turn;
+        getCurrentPlayer().startTurn();
     }
 
     public Player getCurrentPlayer() {
-        return players.get(currentPlayerIndex);
+        return isPlayer1Turn ? player1 : player2;
     }
 }

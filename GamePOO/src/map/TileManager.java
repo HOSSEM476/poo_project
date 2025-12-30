@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import javax.imageio.ImageIO;
 import GamePanelAndFrame.GamePanel;
 
@@ -94,7 +93,7 @@ public class TileManager {
 
             int tileNum = mapTileNum[col][row];
 
-            g2.drawImage(tile[tileNum].image, x, y, gp.tileSize, gp.tileSize, null);
+            g2.drawImage(tile[tileNum].image, x, y, gp.tileSize, gp.tileSize,null);
             col++;
             x += gp.tileSize;
             
