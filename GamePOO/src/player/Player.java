@@ -29,37 +29,45 @@ public class Player {
     }
 
     public void startTurn() {
-        g.addCommentary((isAi ? "AI" : "Player") + "'s turn has started.");
+        if (g != null)
+            g.addCommentary((isAi ? "AI" : "Player") + "'s turn has started.");
         collectResources();
     }
 
     public void endTurn() {
-        g.addCommentary((isAi ? "AI" : "Player") + "'s turn has ended.");
+        if (g != null)
+            g.addCommentary((isAi ? "AI" : "Player") + "'s turn has ended.");
     }
 
     public void trainUnit(Unit unit) {
+        if (unit == null) return;
         units.add(unit);
-        g.addCommentary((isAi ? "AI" : "Player") +
-                " trained a " + unit.getName());
+        if (g != null)
+            g.addCommentary((isAi ? "AI" : "Player") +
+                    " trained a " + unit.getName());
     }
 
     public void onEnemyUnitKilled(Unit enemy) {
         pts += 1;
-        g.addCommentary("Enemy unit killed! Points: " + pts);
+        if (g != null)
+            g.addCommentary("Enemy unit killed! Points: " + pts);
     }
 
     public void addBuilding(Building building) {
+        if (building == null) return;
         buildings.add(building);
-        g.addCommentary((isAi ? "AI" : "Player") +
-                " built a " + building.getClass().getSimpleName());
+        if (g != null)
+            g.addCommentary((isAi ? "AI" : "Player") +
+                    " built a " + building.getClass().getSimpleName());
     }
 
     public void collectResources() {
         for (Building building : buildings) {
             building.produce();
         }
-        g.addCommentary((isAi ? "AI" : "Player") +
-                " collected resources.");
+        if (g != null)
+            g.addCommentary((isAi ? "AI" : "Player") +
+                    " collected resources.");
     }
 
     public List<Unit> getUnits() {

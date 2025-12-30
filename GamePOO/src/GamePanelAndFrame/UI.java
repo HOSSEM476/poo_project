@@ -22,7 +22,7 @@ public class UI {
     		 return;
     	 }
     	drawCommentScreen(g2); // Draw rectangle
-    	drawScor();
+    	drawScor(g2);
         drawText(g2);          // Draw commentary text
     }
     
@@ -101,8 +101,28 @@ public class UI {
  
     }
     
-    private void drawScor() {
+    private void drawScor(Graphics2D g2) {
+    	String AI ="AI's score:";
+    	String P ="your score:";
+    	String AIScore="55";
+    	String PlayerScore="5";
+    	g2.setColor(Color.WHITE); // Text color
+        g2.setFont(g2.getFont().deriveFont(60f)); // Text size
+        int x1 = g.tileSize+100;
+        int x = g.tileSize +700; // Start X
+        int y = g.tileSize *11; // Start Y
+        g2.drawString(AIScore, x, y);
+        g2.drawString(PlayerScore, x1, y);
     	
+        g2.setColor(Color.WHITE); // Text color
+        g2.setFont(g2.getFont().deriveFont(40f)); // Text size
+        int x2=g.tileSize +630;
+        int x3=g.tileSize ;  
+        int y1 = g.tileSize *9;
+       
+        g2.drawString(AI, x2, y1);
+        g2.drawString(P, x3, y1);
+        
     }
     
 }

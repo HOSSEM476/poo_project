@@ -20,6 +20,8 @@ public class TileManager {
         getTileImage();
         loadMap("/map/DRAW.txt");
     }
+    
+    
 
     public void getTileImage() {
         try {
