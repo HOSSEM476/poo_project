@@ -1,11 +1,14 @@
 package resources;
 import java.util.EnumMap;
 
+import GamePanelAndFrame.GamePanel;
+
 public class ResourceManager {
     private EnumMap<ResourceType, Integer> resources;
-
-    public ResourceManager() {
-        resources = new EnumMap<>(ResourceType.class);
+   GamePanel g;
+    public ResourceManager( GamePanel g) {
+       this.g =g;
+    	resources = new EnumMap<>(ResourceType.class);
         for (ResourceType type : ResourceType.values()) {
             resources.put(type, 0); 
         }
@@ -25,12 +28,15 @@ public class ResourceManager {
     }
 
     public int getResource(ResourceType type) {
-        return resources.get(type);
+        return resources.getOrDefault(type, 0);
     }
+
+
 
     public void printResources() {
         for (ResourceType type : ResourceType.values()) {
-            System.out.println(type + ": " + resources.get(type));
+            g.addCommentary(type + ": " +resources.getOrDefault(type, 0));
         }
+        
     }
 }

@@ -66,6 +66,7 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == titelState) {
             UI.draw(g2);
         } else {
+        	
             tileM.draw(g2);
             UI.draw(g2);
         }
@@ -95,6 +96,10 @@ public class GamePanel extends JPanel implements Runnable {
             autoScroll = true; // resume auto-scroll
         }
         repaint();
+    }
+    public void endTurn() {
+        addCommentary((p.isAi ? "AI" : "Player") + "'s turn has ended.");
+        commentaryText = "";
     }
 
 

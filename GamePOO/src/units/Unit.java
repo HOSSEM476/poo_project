@@ -89,12 +89,6 @@ public abstract class Unit {
         return defense;
     }
 
-    // Drawing
-    public void draw(Graphics2D g2) {
-        if (!isAlive()) return;
-        if (image != null) {
-            g2.drawImage(image, x, y, tileSize, tileSize, null);
-        }
-    }
+   
 }
 

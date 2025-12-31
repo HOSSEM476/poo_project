@@ -23,7 +23,7 @@ public class Main {
         // Create players
         Player human = new Player(false, gamePanel);
         Player ai = new Player(true, gamePanel);
-
+       
         // Give starting gold
         human.addGold(100);
         ai.addGold(100);
@@ -38,7 +38,9 @@ public class Main {
         gamePanel.gameThread.start();
 
         // Start the first turn
+        
         TurnManager t= new TurnManager(human, ai) ;
+        human.getResourceManager().printResources();
         t.startTurn();
 
         // Instructions in commentary

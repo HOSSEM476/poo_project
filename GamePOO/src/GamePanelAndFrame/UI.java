@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
+import player.Player;
+import resources.ResourceManager;
+import resources.ResourceType;
+
 // Handles the user interface (commentary rectangle + text)
 public class UI {
     public int CommandNum =0;
@@ -21,8 +25,9 @@ public class UI {
     		 drawTitelScreen();
     		 return;
     	 }
+    	drawResources(g2);
     	drawCommentScreen(g2); // Draw rectangle
-    	drawScor(g2);
+    	drawScore(g2);
         drawText(g2);          // Draw commentary text
     }
     
@@ -69,6 +74,7 @@ public class UI {
 
     // Draw commentary text inside rectangle
     private void drawText(Graphics2D g2) {
+    	drawResources(g2);
         g2.setColor(Color.WHITE); // Text color
         g2.setFont(g2.getFont().deriveFont(18f)); // Text size
 
@@ -101,11 +107,15 @@ public class UI {
  
     }
     
-    private void drawScor(Graphics2D g2) {
+    private void drawScore(Graphics2D g2) {
     	String AI ="AI's score:";
     	String P ="your score:";
-    	String AIScore="55";
-    	String PlayerScore="5";
+    	Player p1 = g.turnManager.player1;
+    	Player p2 = g.turnManager.player2;
+
+    	String PlayerScore = String.valueOf(p1.getPoints());
+    	String AIScore = String.valueOf(p2.getPoints());
+    	
     	g2.setColor(Color.WHITE); // Text color
         g2.setFont(g2.getFont().deriveFont(60f)); // Text size
         int x1 = g.tileSize+100;
@@ -124,5 +134,25 @@ public class UI {
         g2.drawString(P, x3, y1);
         
     }
+   
+    
+ // UI.java
+    public void drawResources(Graphics2D g2) {
+        ResourceManager rm = g.turnManager.getCurrentPlayer().getResourceManager();
+
+        int x = g.tileSize;
+        int y = g.tileSize * 12;
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(28f));
+
+        for (ResourceType type : ResourceType.values()) {
+            g2.drawString(type + ": " + rm.getResource(type), x, y);
+            y += 30;
+        }
+    }
+
+
+
     
 }

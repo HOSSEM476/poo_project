@@ -3,12 +3,13 @@ package player;
 import units.*;
 import java.util.Random;
 
+import resources.ResourceManager;
 import resources.ResourceType;
 
 public class TurnManager {
-
-    private Player player1; // human
-    private Player player2; // AI
+	ResourceManager R;
+    public Player player1; // human
+    public Player player2; // AI
     private boolean isPlayer1Turn; // whose turn
     private Random random = new Random();
 
@@ -26,6 +27,8 @@ public class TurnManager {
     // Start current player's turn
     public void startTurn() {
         Player current = getCurrentPlayer();
+        current.getResourceManager().printResources();
+        
         current.startTurn();
 
         // If AI, act automatically

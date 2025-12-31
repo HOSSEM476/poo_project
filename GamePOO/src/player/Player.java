@@ -17,13 +17,13 @@ public class Player {
     private List<Unit> units;
     private List<Building> buildings;
     private ResourceManager resourceManager;
-    private boolean isAi;
+    public boolean isAi;
 
     // Constructor
     public Player(boolean isAi, GamePanel g) {
         this.units = new ArrayList<>();
         this.buildings = new ArrayList<>();
-        this.resourceManager = new ResourceManager();
+        this.resourceManager = new ResourceManager(g);
         this.pts = 0;
         this.isAi = isAi;
         this.g = g;
@@ -66,9 +66,7 @@ public class Player {
         for (Building building : buildings) {
             building.produce();
         }
-        if (g != null)
-            g.addCommentary((isAi ? "AI" : "Player") +
-                    " collected resources.");
+      
     }
 
     public List<Unit> getUnits() {
