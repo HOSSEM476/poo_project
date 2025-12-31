@@ -9,6 +9,7 @@ import map.TileManager;
 import player.Player;
 import player.TurnManager;
 
+@SuppressWarnings("serial")
 public class GamePanel extends JPanel implements Runnable {
 
     public int commentaryScroll = 0;
@@ -38,7 +39,7 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
 	
 	private boolean autoScroll = true; // auto-scroll enabled
-	final int commentaryLinesVisible = 6; // visible lines
+	final int commentaryLinesVisible = 7; // visible lines
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -98,7 +99,7 @@ public class GamePanel extends JPanel implements Runnable {
         repaint();
     }
     public void endTurn() {
-        addCommentary((p.isAi ? "AI" : "Player") + "'s turn has ended.");
+        addCommentary((p.isAi() ? "AI" : "Player") + "'s turn has ended.");
         commentaryText = "";
     }
 
@@ -118,6 +119,12 @@ public class GamePanel extends JPanel implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+    public void clearCommentary() {
+        commentaryText = "";
+        commentaryScroll = 0;
+        autoScroll = true;
+        repaint();
     }
 }
 

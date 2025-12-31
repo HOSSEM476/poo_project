@@ -1,15 +1,9 @@
 package resources;
 import java.util.EnumMap;
-<<<<<<< HEAD
-=======
-
 import GamePanelAndFrame.GamePanel;
->>>>>>> branch 'Hossem' of https://github.com/HOSSEM476/poo_project
 
 public class ResourceManager {
     private EnumMap<ResourceType, Integer> resources;
-<<<<<<< HEAD
-=======
    GamePanel g;
     public ResourceManager( GamePanel g) {
        this.g =g;
@@ -18,38 +12,7 @@ public class ResourceManager {
             resources.put(type, 0); 
         }
     }
->>>>>>> branch 'Hossem' of https://github.com/HOSSEM476/poo_project
 
-<<<<<<< HEAD
-    public ResourceManager() {
-        resources = new EnumMap<>(ResourceType.class);
-        for (ResourceType type : ResourceType.values()) {
-            resources.put(type, 0); 
-        }
-    }
-
-    public void addResource(ResourceType type, int amount) {
-        resources.put(type, resources.get(type) + amount);
-    }
-
-    public boolean spendResource(ResourceType type, int amount) {
-        int current = resources.get(type);
-        if (current >= amount) {
-            resources.put(type, current - amount);
-            return true;
-        }
-        return false;
-    }
-
-    public int getResource(ResourceType type) {
-        return resources.get(type);
-    }
-
-    public void printResources() {
-        for (ResourceType type : ResourceType.values()) {
-            System.out.println(type + ": " + resources.get(type));
-        }
-=======
     public void addResource(ResourceType type, int amount) {
         resources.put(type, resources.get(type) + amount);
     }
@@ -67,13 +30,11 @@ public class ResourceManager {
         return resources.getOrDefault(type, 0);
     }
 
-
-
     public void printResources() {
         for (ResourceType type : ResourceType.values()) {
             g.addCommentary(type + ": " +resources.getOrDefault(type, 0));
         }
         
->>>>>>> branch 'Hossem' of https://github.com/HOSSEM476/poo_project
+
     }
 }

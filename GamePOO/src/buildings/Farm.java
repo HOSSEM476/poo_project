@@ -8,11 +8,7 @@ public class Farm extends Building {
     
     public Farm(ResourceManager manager) {
         super("Farm", 50);
-<<<<<<< HEAD
         this.foodProduction = 35;
-=======
-        this.foodProduction = 20;
->>>>>>> branch 'Hossem' of https://github.com/HOSSEM476/poo_project
         this.manager = manager;
     }
     @Override

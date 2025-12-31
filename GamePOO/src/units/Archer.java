@@ -1,8 +1,6 @@
  package units;
 import GamePanelAndFrame.GamePanel;
 
-import GamePanelAndFrame.GamePanel;
-
 public class Archer extends Unit {
 	GamePanel g;
 
@@ -19,16 +17,14 @@ public class Archer extends Unit {
             damage = 0;
         }
 
-<<<<<<< HEAD
+
         g.addCommentary("Archer shoots " + target.getType() + " for " + damage + " damage.");
-=======
         // ❌ System.out.println
         // ✅ UI commentary
         g.addCommentary(
             "Archer shoots " + target.getType() +
             " for " + damage + " damage."
         );
->>>>>>> branch 'Hossem' of https://github.com/HOSSEM476/poo_project
 
         target.takeDamage(damage);
     }

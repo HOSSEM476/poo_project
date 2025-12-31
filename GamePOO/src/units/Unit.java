@@ -1,6 +1,5 @@
 package units;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
@@ -63,26 +62,10 @@ public abstract class Unit {
     public boolean isAlive() {
         return hp > 0;
     }
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-    public abstract String getType();
-    public int getCost() {
-    	return cost;
-=======
     // Getters
     public int getCost() {
         return cost;
->>>>>>> branch 'Aymen' of https://github.com/HOSSEM476/poo_project
-=======
-    // Getters
-    public int getCost() {
-        return cost;
->>>>>>> branch 'Hossem' of https://github.com/HOSSEM476/poo_project
     }
-
-<<<<<<< HEAD
-<<<<<<< HEAD
 	public String getName() {
 		return name;
 	}
@@ -133,52 +116,6 @@ public abstract class Unit {
 
 	public void setRandom(Random random) {
 		this.random = random;
-	}
-=======
-    public String getName() {
-        return name;
-    }
-
-    public int getHp() {
-        return hp;
-    }
-
-    public int getMaxHp() {
-        return maxHp;
-    }
-
-    public int getAttack() {
-        return attack;
-    }
-
-    public int getDefense() {
-        return defense;
-    }
-
-   
->>>>>>> branch 'Aymen' of https://github.com/HOSSEM476/poo_project
-=======
-    public String getName() {
-        return name;
-    }
-
-    public int getHp() {
-        return hp;
-    }
-
-    public int getMaxHp() {
-        return maxHp;
-    }
-
-    public int getAttack() {
-        return attack;
-    }
-
-    public int getDefense() {
-        return defense;
-    }
-
-   
->>>>>>> branch 'Hossem' of https://github.com/HOSSEM476/poo_project
+	}   
 }
 
