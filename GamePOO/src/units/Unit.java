@@ -65,6 +65,7 @@ public abstract class Unit {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     public abstract String getType();
     public int getCost() {
     	return cost;
@@ -73,8 +74,14 @@ public abstract class Unit {
     public int getCost() {
         return cost;
 >>>>>>> branch 'Aymen' of https://github.com/HOSSEM476/poo_project
+=======
+    // Getters
+    public int getCost() {
+        return cost;
+>>>>>>> branch 'Hossem' of https://github.com/HOSSEM476/poo_project
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 	public String getName() {
 		return name;
@@ -150,4 +157,28 @@ public abstract class Unit {
 
    
 >>>>>>> branch 'Aymen' of https://github.com/HOSSEM476/poo_project
+=======
+    public String getName() {
+        return name;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public int getDefense() {
+        return defense;
+    }
+
+   
+>>>>>>> branch 'Hossem' of https://github.com/HOSSEM476/poo_project
 }
+

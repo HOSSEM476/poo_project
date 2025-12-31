@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import javax.imageio.ImageIO;
 import GamePanelAndFrame.GamePanel;
 
@@ -21,6 +20,8 @@ public class TileManager {
         getTileImage();
         loadMap("/map/DRAW.txt");
     }
+    
+    
 
     public void getTileImage() {
         try {
@@ -55,7 +56,7 @@ public class TileManager {
             InputStream is = getClass().getResourceAsStream(filePath);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-            int col = 0;
+            int col = 0;  
             int row = 0;
 
             while (col < gp.maxScreenCol && row < gp.maxScreenRow) {
@@ -94,7 +95,7 @@ public class TileManager {
 
             int tileNum = mapTileNum[col][row];
 
-            g2.drawImage(tile[tileNum].image, x, y, gp.tileSize, gp.tileSize, null);
+            g2.drawImage(tile[tileNum].image, x, y, gp.tileSize, gp.tileSize,null);
             col++;
             x += gp.tileSize;
             

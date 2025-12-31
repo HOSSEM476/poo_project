@@ -4,53 +4,125 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
 import javax.swing.JPanel;
-
 import map.TileManager;
+import player.Player;
+import player.TurnManager;
 
-public class GamePanel extends JPanel implements Runnable{
-    
-    // SCREEN SETTINGS
-    final int originalTileSize = 16; // 16x16 tile
+public class GamePanel extends JPanel implements Runnable {
+
+    public int commentaryScroll = 0;
+    public int scrollTimer = 0;
+
+    final int originalTileSize = 16; 
     final int scale = 3;
-    
-    public final int tileSize = originalTileSize * scale; // 48x48 tile
+    public final int tileSize = originalTileSize * scale;
     public final int maxScreenCol = 20;
-    public final int maxScreenRow = 12;
-    final int screenWidth = tileSize * maxScreenCol; // 768 pixels
-    final int screenHeight = tileSize * maxScreenRow; // 576 pixels
-   
-    
-    TileManager tileM = new TileManager(this);
+    public final int maxScreenRow = 13;
+
+    public String commentaryText = "";
+    final int screenWidth = tileSize * maxScreenCol;
+    final int screenHeight = tileSize * maxScreenRow;
+
+    Graphics2D g2;
+    public TileManager tileM;
+    public UI UI;
+    public KeyHandler keyH;
+    public TurnManager turnManager;
+
+    public Player p;
+
+    int gameState = 0;
+    int titelState = 1;
+   int playState =2;
     Thread gameThread;
+	
+	private boolean autoScroll = true; // auto-scroll enabled
+	final int commentaryLinesVisible = 6; // visible lines
+
     public GamePanel() {
-        // Set the size of the panel
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        // Set background color to black
-        this.setBackground(Color.red);
-        // Enabling double buffering can improve game rendering performance
         this.setDoubleBuffered(true);
+        this.setBackground(Color.black);
+        this.setFocusable(true);
+
+        // Initialize after GamePanel exists
+        p = new Player(false, this);
+        tileM = new TileManager(this);
+        UI = new UI(this);
+        keyH = new KeyHandler(this);
+
+        this.addKeyListener(keyH);
+        this.requestFocusInWindow();
+
+        gameState = titelState;
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g2 = (Graphics2D) g;
+
+        if (gameState == titelState) {
+            UI.draw(g2);
+        } else {
+        	
+            tileM.draw(g2);
+            UI.draw(g2);
+        }
+    }
+
+    public void addCommentary(String text) {
+        commentaryText += text + "\n";
+        if (autoScroll) {
+            int totalLines = commentaryText.split("\n").length;
+            commentaryScroll = Math.max(0, totalLines - commentaryLinesVisible);
+        }
+        repaint();
     }
     
-    public void startgameThread() {
-     gameThread = new Thread(this);
-     gameThread.start();
+    public void scrollUp() {
+        commentaryScroll--;
+        if (commentaryScroll < 0) commentaryScroll = 0;
+        autoScroll = false; // stop auto-scroll when user scrolls up
+        repaint();
     }
-	@Override
-	public void run() {
-		
-		
-		
-	}
-	@Override
-	public void paintComponent(Graphics g) {
-	    super.paintComponent(g);
 
-	    Graphics2D g2 = (Graphics2D) g;
+    public void scrollDown() {
+        commentaryScroll++;
+        int totalLines = commentaryText.split("\n").length;
+        if (commentaryScroll >= totalLines - commentaryLinesVisible) {
+            commentaryScroll = Math.max(0, totalLines - commentaryLinesVisible);
+            autoScroll = true; // resume auto-scroll
+        }
+        repaint();
+    }
+    public void endTurn() {
+        addCommentary((p.isAi ? "AI" : "Player") + "'s turn has ended.");
+        commentaryText = "";
+    }
 
-	    tileM.draw(g2); // <<< THIS IS REQUIRED
-	}
 
+    @Override
+    public void run() {
+        while (gameThread != null) {
+            scrollTimer++;
+            if (scrollTimer > 60) {
+                scrollTimer = 0;
+                repaint();
+            }
+
+            try {
+                Thread.sleep(16);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
 
+
+
+
+	
+	
