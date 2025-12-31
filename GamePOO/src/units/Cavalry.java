@@ -1,9 +1,11 @@
 package units;
+import GamePanelAndFrame.GamePanel;
 
 public class Cavalry extends Unit {
+	GamePanel g;
 
     public Cavalry() {
-        super("Cavalry", 120, 30, 15 , 90);
+        super("Cavalry", 65, 30, 15 , 70);
     }
 
     @Override
@@ -15,10 +17,7 @@ public class Cavalry extends Unit {
             damage = 0;
         }
 
-        System.out.println(
-            "Cavalry charges " + target.getType() +
-            " for " + damage + " damage."
-        );
+        g.addCommentary("Cavalry charges " + target.getType() + " for " + damage + " damage.");
 
         target.takeDamage(damage);
     }

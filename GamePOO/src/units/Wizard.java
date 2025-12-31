@@ -1,26 +1,21 @@
 package units;
+import GamePanelAndFrame.GamePanel;
 
 public class Wizard extends Unit {
+	GamePanel g;
 
     private static final int HEAL_AMOUNT  = 25;
 
     public Wizard() {
-        super("Wizard", 60, 0, 5, 100);
+        super("Wizard", 35, 0, 5, 80);
     }
 
     @Override
     public void attack(Unit target) {
-        if (!target.isAlive()) {
-            System.out.println("Wizard cannot heal a dead unit.");
-            return;
-        }
-
+ 
         target.heal(HEAL_AMOUNT);
 
-        System.out.println(
-            "Wizard heals " + target.getType() +
-            " for " + HEAL_AMOUNT + " HP."
-        );
+        g.addCommentary( "Wizard heals " + target.getType() +" for " + HEAL_AMOUNT + " HP.");
     }
 
     @Override
