@@ -8,7 +8,7 @@ public class Farm extends Building {
     
     public Farm(ResourceManager manager) {
         super("Farm", 50);
-        this.foodProduction = 20;
+        this.foodProduction = 35;
         this.manager = manager;
     }
     @Override

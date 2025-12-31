@@ -1,9 +1,11 @@
-package units;
+ package units;
+import GamePanelAndFrame.GamePanel;
 
 public class Archer extends Unit {
+	GamePanel g;
 
     public Archer() {
-        super("Archer", 70, 25, 5, 60);
+        super("Archer", 45, 20, 5, 40);
     }
 
     @Override
@@ -15,10 +17,7 @@ public class Archer extends Unit {
             damage = 0;
         }
 
-        System.out.println(
-            "Archer shoots " + target.getType() +
-            " for " + damage + " damage."
-        );
+        g.addCommentary("Archer shoots " + target.getType() + " for " + damage + " damage.");
 
         target.takeDamage(damage);
     }

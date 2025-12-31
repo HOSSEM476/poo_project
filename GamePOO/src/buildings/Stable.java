@@ -10,7 +10,7 @@ public class Stable extends Building {
     }
 
     public void produce() {
-        System.out.println(getName() + " trains " + unitType + " for ");
+        System.out.println(getName() + " trains " + unitType);
     }
 
     public String getUnitType() {

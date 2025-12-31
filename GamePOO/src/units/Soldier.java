@@ -1,9 +1,11 @@
 package units;
+import GamePanelAndFrame.GamePanel;
 
 public class Soldier extends Unit {
+	GamePanel g;
 
     public Soldier() {
-        super("Soldier", 100, 20, 10, 50);
+        super("Soldier", 55, 25, 10, 30);
     }
 
     @Override
@@ -15,10 +17,7 @@ public class Soldier extends Unit {
             damage = 0;
         }
         
-        System.out.println(
-            "Soldier attacks " + target.getType() +
-            " for " + damage + " damage."
-        );
+        g.addCommentary("Soldier attacks " + target.getType() + " for " + damage + " damage.");
 
         target.takeDamage(damage);
     }
