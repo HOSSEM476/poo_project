@@ -1,32 +1,19 @@
- package units;
-import GamePanelAndFrame.GamePanel;
+package units;
 
 public class Archer extends Unit {
-	GamePanel g;
 
     public Archer() {
         super("Archer", 45, 20, 5, 40);
+    
+
+       
     }
 
     @Override
     public void attack(Unit target) {
-        int randomFactor = random.nextInt(2) + 1;
-        int damage = (attack - target.getDefense()) * randomFactor;
-
-        if (damage < 0) {
-            damage = 0;
-        }
-
-
-        g.addCommentary("Archer shoots " + target.getType() + " for " + damage + " damage.");
-        // ❌ System.out.println
-        // ✅ UI commentary
-        g.addCommentary(
-            "Archer shoots " + target.getType() +
-            " for " + damage + " damage."
-        );
-
+        int damage = Math.max(0, (attack - target.getDefense()));
         target.takeDamage(damage);
+        // Optional: commentary handled in TurnManager or Player
     }
 
     @Override

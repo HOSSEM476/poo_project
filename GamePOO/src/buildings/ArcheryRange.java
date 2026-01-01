@@ -1,10 +1,13 @@
 package buildings;
+
+import GamePanelAndFrame.GamePanel;
+
 public class ArcheryRange extends Building {
 
     private String unitType;
 
-    public ArcheryRange() {
-        super("Archery Range", 120);
+    public ArcheryRange(GamePanel g) {
+        super("Archery Range", 20);
         this.unitType = "Archer";
     }
 

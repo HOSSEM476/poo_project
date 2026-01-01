@@ -1,11 +1,13 @@
 package buildings;
 
+import GamePanelAndFrame.GamePanel;
+
 public class Barracks extends Building {
     
     private String unitType;
     
-    public Barracks() {
-        super("Barrack", 150);
+    public Barracks(GamePanel g) {
+        super("Barrack", 1);
         this.unitType = "Soldier";
     }
     

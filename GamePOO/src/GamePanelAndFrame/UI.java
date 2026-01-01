@@ -4,9 +4,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
+import buildings.Building;
 import player.Player;
 import resources.ResourceManager;
 import resources.ResourceType;
+import units.Unit;
 
 // Handles the user interface (commentary rectangle + text)
 public class UI {
@@ -26,6 +28,9 @@ public class UI {
     		 return;
     	 }
     	drawResources(g2);
+    	drawUnitList(g2);
+    	drawBuildingList(g2);
+
     	drawCommentScreen(g2); // Draw rectangle
     	drawScore(g2);
         drawText(g2);          // Draw commentary text
@@ -64,9 +69,9 @@ public class UI {
     // Draw semi-transparent rectangle for commentary
     private void drawCommentScreen(Graphics2D g2) {
         int x = g.tileSize - 48;
-        int y = g.tileSize * 8;
+        int y = g.tileSize -48;
         int width = g.screenWidth;
-        int height = g.tileSize * 5;
+        int height = g.screenHeight;
 
         g2.setColor(new Color(0, 0, 0, 220)); // Semi-transparent black
         g2.fillRoundRect(x, y, width, height, 35, 35); // Rounded rectangle
@@ -75,6 +80,10 @@ public class UI {
     // Draw commentary text inside rectangle
     private void drawText(Graphics2D g2) {
     	drawResources(g2);
+    	drawUnitList(g2);
+    	drawBuildingList(g2);
+
+
         g2.setColor(Color.WHITE); // Text color
         g2.setFont(g2.getFont().deriveFont(18f)); // Text size
 
@@ -117,18 +126,18 @@ public class UI {
     	String AIScore = String.valueOf(p2.getPoints());
     	
     	g2.setColor(Color.WHITE); // Text color
-        g2.setFont(g2.getFont().deriveFont(60f)); // Text size
-        int x1 = g.tileSize+100;
-        int x = g.tileSize +700; // Start X
-        int y = g.tileSize *11; // Start Y
+        g2.setFont(g2.getFont().deriveFont(30f)); // Text size
+        int x1 = g.tileSize+50;
+        int x = g.tileSize +750; // Start X
+        int y = g.tileSize *3; // Start Y
         g2.drawString(AIScore, x, y);
         g2.drawString(PlayerScore, x1, y);
     	
         g2.setColor(Color.WHITE); // Text color
-        g2.setFont(g2.getFont().deriveFont(40f)); // Text size
-        int x2=g.tileSize +630;
+        g2.setFont(g2.getFont().deriveFont(20f)); // Text size
+        int x2=g.tileSize +700;
         int x3=g.tileSize ;  
-        int y1 = g.tileSize *9;
+        int y1 = g.tileSize *2;
        
         g2.drawString(AI, x2, y1);
         g2.drawString(P, x3, y1);
@@ -151,8 +160,70 @@ public class UI {
             y += 30;
         }
     }
+ 
+    public void drawUnitList(Graphics2D g2) {
 
+        Player human = g.turnManager.player1;
+        Player ai = g.turnManager.player2;
 
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(28f));
+
+        int startY = g.tileSize * 5;
+
+        // ---- PLAYER UNITS ----
+        g2.drawString("Your units:", g.tileSize, startY);
+        int y = startY + 30;
+
+        for (Unit u : human.getUnits()) {
+            g2.drawString("- " + u.getName(), g.tileSize, y);
+            y += 25;
+        }
+
+        // ---- AI UNITS ----
+        int xAI = g.screenWidth - g.tileSize * 6;
+        y = startY;
+
+        g2.drawString("AI units:", xAI, y);
+        y += 30;
+
+        for (Unit u : ai.getUnits()) {
+            g2.drawString("- " + u.getName(), xAI, y);
+            y += 25;
+        }
+    }
+
+    public void drawBuildingList(Graphics2D g2) {
+
+        Player human = g.turnManager.player1;
+        Player ai = g.turnManager.player2;
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(26f));
+
+        int startY = g.tileSize * 8;
+
+        // ---- PLAYER BUILDINGS ----
+        g2.drawString("Your buildings:", g.tileSize, startY);
+        int y = startY + 28;
+
+        for (Building b : human.getBuildings()) {
+            g2.drawString("- " + b.getClass().getSimpleName(), g.tileSize, y);
+            y += 24;
+        }
+
+        // ---- AI BUILDINGS ----
+        int xAI = g.screenWidth - g.tileSize * 7;
+        y = startY;
+
+        g2.drawString("AI buildings:", xAI, y);
+        y += 28;
+
+        for (Building b : ai.getBuildings()) {
+            g2.drawString("- " + b.getClass().getSimpleName(), xAI, y);
+            y += 24;
+        }
+    }
 
     
 }

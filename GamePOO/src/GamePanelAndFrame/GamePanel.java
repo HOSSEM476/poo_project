@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import map.TileManager;
 import player.Player;
 import player.TurnManager;
+import units.Archer;
 
 @SuppressWarnings("serial")
 public class GamePanel extends JPanel implements Runnable {
@@ -41,23 +42,31 @@ public class GamePanel extends JPanel implements Runnable {
 	private boolean autoScroll = true; // auto-scroll enabled
 	final int commentaryLinesVisible = 7; // visible lines
 
-    public GamePanel() {
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setDoubleBuffered(true);
-        this.setBackground(Color.black);
-        this.setFocusable(true);
+	public GamePanel() {
+	    this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+	    this.setDoubleBuffered(true);
+	    this.setBackground(Color.black);
+	    this.setFocusable(true);
 
-        // Initialize after GamePanel exists
-        p = new Player(false, this);
-        tileM = new TileManager(this);
-        UI = new UI(this);
-        keyH = new KeyHandler(this);
+	    // Initialize UI and map first
+	    tileM = new TileManager(this);
+	    UI = new UI(this);
+	    keyH = new KeyHandler(this);
+	    this.addKeyListener(keyH);
+	    this.requestFocusInWindow();
 
-        this.addKeyListener(keyH);
-        this.requestFocusInWindow();
+	    // --- Initialize players ---
+	    Player human = new Player(false, this);
+	    Player ai = new Player(true, this);
 
-        gameState = titelState;
-    }
+	    // --- Initialize TurnManager ---
+	    turnManager = new TurnManager(human, ai, this);
+
+	   
+
+	    gameState = titelState; // or playState
+	}
+
 
     @Override
     public void paintComponent(Graphics g) {
@@ -67,11 +76,13 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == titelState) {
             UI.draw(g2);
         } else {
-        	
-            tileM.draw(g2);
-            UI.draw(g2);
+            tileM.draw(g2);            // Draw map first
+         
+
+            UI.draw(g2);               // Draw UI on top
         }
     }
+
 
     public void addCommentary(String text) {
         commentaryText += text + "\n";
@@ -100,8 +111,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
     public void endTurn() {
         addCommentary((p.isAi() ? "AI" : "Player") + "'s turn has ended.");
-        commentaryText = "";
     }
+
 
 
     @Override

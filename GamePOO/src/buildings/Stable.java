@@ -1,10 +1,12 @@
 package buildings;
 
+import GamePanelAndFrame.GamePanel;
+
 public class Stable extends Building {
 
     private String unitType;
 
-    public Stable() {
+    public Stable(GamePanel g) {
         super("Stable", 180);
         this.unitType = "Cavalry";
     }

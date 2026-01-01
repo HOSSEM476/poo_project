@@ -1,9 +1,12 @@
 package buildings;
+
+import GamePanelAndFrame.GamePanel;
+
 public class Magetower extends Building {
 
     private String unitType;
 
-    public Magetower() {
+    public Magetower(GamePanel g) {
         super("Mage Tower", 200);
         this.unitType = "Mage";
     }

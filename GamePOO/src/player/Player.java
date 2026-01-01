@@ -1,6 +1,7 @@
 package player;
 
 
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,14 +67,8 @@ public class Player {
             g.addCommentary((isAi ? "AI" : "Player") + " trained a " + unit.getName());
         }
     }
-        public void showUnits() {
-        	if (isAi() || units == null) return;
-        	g.addCommentary("Trained Units:");
-            for (Unit unit : units) {
-                g.addCommentary(" -" + unit.getName() + "\n");
-                
-            }
-        }
+        
+        
      public GamePanel getG() {
 			return g;
 		}
@@ -104,10 +99,8 @@ public class Player {
     public void addBuilding(Building building) {
         if (building == null) return;
         buildings.add(building);
-        if (g != null)
-            g.addCommentary((isAi ? "AI" : "Player") +
-                    " built a " + building.getClass().getSimpleName());
     }
+
 
     public void collectResources() {
         for (Building building : buildings){
@@ -155,4 +148,7 @@ public class Player {
     public boolean spendFood(int amount) {
         return resourceManager.spendResource(ResourceType.FOOD, amount);
     }
-}
+    
+   
+    }
+

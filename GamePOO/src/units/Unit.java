@@ -1,5 +1,6 @@
 package units;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
@@ -17,8 +18,10 @@ public abstract class Unit {
 
     // Drawing-related variables
     public BufferedImage image;
-    public int x, y;
+    public int x, y;        // pixel position
+    public int tileX, tileY; // map tile coordinates
     public int tileSize;
+    
 
     // Constructor
     public Unit(String name, int hp, int attack, int defense, int cost) {
@@ -29,6 +32,8 @@ public abstract class Unit {
         this.defense = defense;
         this.cost = cost;
     }
+    
+    
 
     // Drawing setup
     public void setImage(BufferedImage image) {
