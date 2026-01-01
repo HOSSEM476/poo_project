@@ -1,154 +1,155 @@
 package player;
 
-
-import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
 import GamePanelAndFrame.GamePanel;
 import buildings.Building;
-import resources.ResourceType;
 import resources.ResourceManager;
-import units.Archer;
-import units.Cavalry;
-import units.Soldier;
+import resources.ResourceType;
 import units.Unit;
-import units.Wizard;
 
 public class Player {
-    private GamePanel g;          // reference to GamePanel
-    private int pts;
-    private List<Unit> units;
-    private List<Building> buildings;
-    private ResourceManager resourceManager;
-    public boolean isAi;
+
+    private GamePanel g;                 // Reference to the game panel
+    private List<Unit> units;            // Player units
+    private List<Building> buildings;    // Player buildings
+    private ResourceManager resourceManager; // Resource manager
+    private int pts;                     // Points
+    public boolean isAi;                 // AI flag
 
     // Constructor
     public Player(boolean isAi, GamePanel g) {
+        this.isAi = isAi;
+        this.g = g;
         this.units = new ArrayList<>();
         this.buildings = new ArrayList<>();
         this.resourceManager = new ResourceManager(g);
         this.pts = 0;
-        this.isAi = isAi;
-        this.g = g;
     }
 
-
+    // ===== TURN START / END =====
     public void startTurn() {
-        if (g != null)
-            g.addCommentary((isAi ? "AI" : "Player") + "'s turn has started.");
+        g.addCommentary((isAi ? "AI" : "Player") + "'s turn has started!");
         collectResources();
     }
 
     public void endTurn() {
-        if (g != null)
-            g.addCommentary((isAi ? "AI" : "Player") + "'s turn has ended.");
+        g.addCommentary((isAi ? "AI" : "Player") + "'s turn has ended!");
     }
 
+    // ===== UNITS =====
     public void trainUnit(Unit unit) {
         if (unit == null) return;
 
-        // 1. Define the requirement
-        String requiredBuilding = "";
-        if (unit instanceof Archer) requiredBuilding = "ArcheryRange";
-        else if (unit instanceof Soldier) requiredBuilding = "Barracks";
-        else if (unit instanceof Cavalry) requiredBuilding = "Stable";
-        else if (unit instanceof Wizard) requiredBuilding = "Magetower";
-
-        // 2. Check the requirement
-        if (!requiredBuilding.equals("") && !hasBuilding(requiredBuilding)) {
-            if (g != null) g.addCommentary("Cannot train " + unit.getName() + "! Need " + requiredBuilding);
-            return; // Stop the method here
+        // Check building requirement
+        String requiredBuilding = player.TurnManager.getRequiredBuilding(unit);
+        if (!hasBuilding(requiredBuilding)) {
+            g.addCommentary("Cannot train " + unit.getName() + "! Need " + requiredBuilding);
+            return;
         }
 
-        // 3. If check passes, proceed with training (your original code)
+        // Check food
+        if (getFood() < unit.getCost()) {
+            g.addCommentary("Not enough food to train " + unit.getName());
+            return;
+        }
+
         units.add(unit);
-        if (g != null) {
-            g.addCommentary((isAi ? "AI" : "Player") + " trained a " + unit.getName());
-        }
+        spendFood(unit.getCost());
+        g.addCommentary((isAi ? "AI" : "Player") + " trained " + unit.getName());
     }
-        
-        
-     public GamePanel getG() {
-			return g;
-		}
 
-
-		public void setG(GamePanel g) {
-			this.g = g;
-		}
-
-
-		// Helper to check if the player owns a specific building type
-        public boolean hasBuilding(String buildingName) {
-            for (Building b : buildings) {
-                // This matches the logic you used in your addBuilding commentary
-                if (b.getClass().getSimpleName().equalsIgnoreCase(buildingName)) {
-                    return true;
-                }
+    public void attack(Unit attacker, Unit target) {
+        if (attacker != null && target != null) {
+            attacker.attack(target);
+            if (!target.isAlive()) {
+                removeUnit(target);
+                onEnemyUnitKilled(target);
             }
-            return false;
         }
+    }
 
-    public void onEnemyUnitKilled(Unit enemy){
+    public void heal(Unit healer, Unit target) {
+        if (healer != null && target != null) {
+            healer.attack(target); // Wizards override attack to heal
+        }
+    }
+
+    public void removeUnit(Unit u) {
+        units.remove(u);
+    }
+
+    public void onEnemyUnitKilled(Unit enemy) {
         pts += 1;
-        if (g != null)
-            g.addCommentary("Enemy unit killed! Points: " + pts);
+        g.addCommentary((isAi ? "AI" : "Player") + " killed " + enemy.getName() + "! Points: " + pts);
     }
 
-    public void addBuilding(Building building) {
-        if (building == null) return;
-        buildings.add(building);
-    }
-
-
-    public void collectResources() {
-        for (Building building : buildings){
-            building.produce();
-        }
-    }
-    
     public List<Unit> getUnits() {
         return units;
     }
 
+    // ===== BUILDINGS =====
+    public void addBuilding(Building b) {
+        if (b != null) {
+            buildings.add(b);
+            g.addCommentary((isAi ? "AI" : "Player") + " built " + b.getName());
+        }
+    }
+
+    public boolean hasBuilding(String buildingName) {
+        for (Building b : buildings) {
+            if (b.getClass().getSimpleName().equalsIgnoreCase(buildingName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public List<Building> getBuildings() {
         return buildings;
     }
+
+    // ===== RESOURCES =====
     public void addFood(int amount) {
-    	resourceManager.addResource(ResourceType.FOOD, amount);
+        resourceManager.addResource(ResourceType.FOOD, amount);
     }
+
     public void addGold(int amount) {
         resourceManager.addResource(ResourceType.GOLD, amount);
     }
+
     public boolean spendGold(int amount) {
         return resourceManager.spendResource(ResourceType.GOLD, amount);
     }
+
+    public boolean spendFood(int amount) {
+        return resourceManager.spendResource(ResourceType.FOOD, amount);
+    }
+
     public int getGold() {
         return resourceManager.getResource(ResourceType.GOLD);
-    }
-
-    public boolean isAi() {
-        return isAi;
-    }
-
-    public int getPoints() {
-        return pts;
-    }
-
-    public ResourceManager getResourceManager() {
-        return resourceManager;
     }
 
     public int getFood() {
         return resourceManager.getResource(ResourceType.FOOD);
     }
 
-    public boolean spendFood(int amount) {
-        return resourceManager.spendResource(ResourceType.FOOD, amount);
-    }
-    
-   
+    public ResourceManager getResourceManager() {
+        return resourceManager;
     }
 
+    // ===== RESOURCE COLLECTION =====
+    public void collectResources() {
+        for (Building b : buildings) {
+            b.produce(); // Farm/Mine produce, others may log training
+        }
+    }
+
+    // ===== GETTERS =====
+    public boolean isAi() { return isAi; }
+    public int getPoints() { return pts; }
+
+    public GamePanel getG() { return g; }
+    public void setG(GamePanel g) { this.g = g; }
+}
