@@ -1,10 +1,8 @@
 package player;
 
 import java.util.Random;
-
 import GamePanelAndFrame.GamePanel;
-import buildings.Building;
-import buildings.BuildingFactory;
+import buildings.*;
 import units.*;
 
 public class TurnManager {
@@ -12,181 +10,119 @@ public class TurnManager {
     private GamePanel g;
     public Player player1; // Human
     public Player player2; // AI
-    private boolean isPlayer1Turn; // whose turn it is
+    private boolean isPlayer1Turn;
+
     private Random random = new Random();
 
     // Phase flags
-    private boolean isAwaitingAction = true;       // Choose: Attack / Build / Train
-    private boolean awaitingBuildingChoice = false;
-    private boolean awaitingUnitChoice = false;
+    private boolean awaitingAction;
+    private boolean awaitingUnitChoice;
+    private boolean awaitingBuildingChoice;
 
     public TurnManager(Player player1, Player player2, GamePanel g) {
         this.player1 = player1;
         this.player2 = player2;
         this.g = g;
-        this.isPlayer1Turn = true;
+        isPlayer1Turn = true;
     }
 
-    // ===== CURRENT PLAYER =====
+    // ================= BASIC GETTERS =================
     public Player getCurrentPlayer() {
         return isPlayer1Turn ? player1 : player2;
     }
 
-    // ===== FLAG GETTERS/SETTERS =====
-    public boolean isAwaitingAction() { return isAwaitingAction; }
-    public void setAwaitingAction(boolean val) { isAwaitingAction = val; }
-
-    public boolean isAwaitingBuildingChoice() { return awaitingBuildingChoice; }
-    public void setAwaitingBuildingChoice(boolean val) { awaitingBuildingChoice = val; }
-
+    public boolean isAwaitingAction() { return awaitingAction; }
     public boolean isAwaitingUnitChoice() { return awaitingUnitChoice; }
-    public void setAwaitingUnitChoice(boolean val) { awaitingUnitChoice = val; }
+    public boolean isAwaitingBuildingChoice() { return awaitingBuildingChoice; }
 
-    // ===== TURN CONTROL =====
+    public void setAwaitingAction(boolean v) { awaitingAction = v; }
+    public void setAwaitingUnitChoice(boolean v) { awaitingUnitChoice = v; }
+    public void setAwaitingBuildingChoice(boolean v) { awaitingBuildingChoice = v; }
+
+    // ================= TURN FLOW =================
     public void startTurn() {
         Player current = getCurrentPlayer();
         current.startTurn();
 
-        // Reset phase flags
-        isAwaitingAction = !current.isAi(); // Human waits for input
-        awaitingBuildingChoice = false;
+        awaitingAction = false;
         awaitingUnitChoice = false;
+        awaitingBuildingChoice = false;
 
         if (current.isAi()) {
-            aiTakeTurn(current);
+            aiTakeAction(current);
+            nextTurn();
         } else {
-            g.addCommentary("Choose an action: 1 = Attack, 2 = Build, 3 = Train Units");
+            showActionMenu();
         }
     }
 
-    // ===== AI LOGIC =====
-    private void aiTakeTurn(Player ai) {
-        // 1️⃣ Collect resources
-        ai.addGold(10);
-        ai.addFood(10);
-
-        // 2️⃣ Build phase
-        String[] buildingsPriority = {"Barracks", "ArcheryRange", "Stable", "Magetower"};
-        for (String bName : buildingsPriority) {
-            if (!ai.hasBuilding(bName) && ai.getGold() >= BuildingFactory.getBuildingCost(bName)) {
-                Building b = BuildingFactory.createBuilding(bName, g);
-                ai.addBuilding(b);
-                ai.spendGold(b.getCost());
-                g.addCommentary("AI built " + bName);
-                break; // Only one action per phase
-            }
-        }
-
-        // 3️⃣ Train phase
-        String[] unitNames = {"Soldier", "Archer", "Cavalry", "Wizard"};
-        for (int i = 1; i <= 4; i++) {
-            Unit u = createUnitByChoice(i);
-            String requiredBuilding = getRequiredBuilding(u);
-
-            if (ai.hasBuilding(requiredBuilding) && ai.getFood() >= u.getCost()) {
-                ai.trainUnit(u);
-                ai.spendFood(u.getCost());
-                g.addCommentary("AI trained " + u.getName());
-                break; // Only one action per phase
-            }
-        }
-
-        // 4️⃣ Attack phase
-        attackPhase(ai);
-
-        // End turn
-        nextTurn();
-    }
-
-    // ===== ATTACK PHASE =====
-    public void attackPhase(Player attacker) {
-        Player defender = attacker == player1 ? player2 : player1;
-
-        if (attacker.getUnits().isEmpty()) {
-            g.addCommentary((attacker.isAi() ? "AI" : "Player") + " has no units to attack.");
-            return;
-        }
-
-        // For AI: attack first enemy unit or heal with Wizard
-        for (Unit u : attacker.getUnits()) {
-            if (u instanceof Wizard) {
-                // Heal self or ally if damaged
-                Unit target = null;
-                for (Unit ally : attacker.getUnits()) {
-                    if (ally.getHp() < ally.getMaxHp()) {
-                        target = ally;
-                        break;
-                    }
-                }
-                if (target != null) {
-                    attacker.heal(u, target);
-                    return;
-                }
-            } else {
-                // Attack enemy
-                if (!defender.getUnits().isEmpty()) {
-                    Unit target = defender.getUnits().get(0); // First enemy unit
-                    attacker.attack(u, target);
-                    return;
-                }
-            }
-        }
-    }
-
-    // ===== NEXT TURN =====
     public void nextTurn() {
-        Player current = getCurrentPlayer();
-
-        // Give passive resources
-        current.addGold(10);
-        current.addFood(10);
-
-        current.endTurn();
-
-        // Switch player
+        getCurrentPlayer().endTurn();
         isPlayer1Turn = !isPlayer1Turn;
-
-        // Clear commentary for next turn
-        if (isPlayer1Turn && g != null) g.clearCommentary();
-
-        // Start next turn
         startTurn();
     }
 
-    // ===== HUMAN TRAIN UNIT =====
-    public void humanTrainUnit(int choice) {
-        Player human = getCurrentPlayer();
-        if (!human.isAi()) {
-            Unit unit = createUnitByChoice(choice);
-            if (unit != null) {
-                if (!human.hasBuilding(getRequiredBuilding(unit))) {
-                    g.addCommentary("Cannot train " + unit.getName() + "! Need " + getRequiredBuilding(unit));
-                    return;
-                }
-                if (human.getFood() >= unit.getCost()) {
-                    human.trainUnit(unit);
-                    human.spendFood(unit.getCost());
-                } else {
-                    g.addCommentary("Not enough food to train " + unit.getName());
-                }
+    public void showActionMenu() {
+        awaitingAction = true;
+        awaitingUnitChoice = false;
+        awaitingBuildingChoice = false;
+
+        g.addCommentary("Choose an action:");
+        g.addCommentary("1 = Attack, 2 = Build, 3 = Train Units, ENTER = End Turn");
+    }
+
+    // ================= AI LOGIC =================
+    private void aiTakeAction(Player ai) {
+        ai.addGold(10);
+        ai.addFood(10);
+
+        // Build priority
+        String[] buildings = {"Barracks", "ArcheryRange", "Stable", "Magetower"};
+        for (String b : buildings) {
+            if (!ai.hasBuilding(b) && ai.getGold() >= BuildingFactory.getBuildingCost(b)) {
+                Building build = BuildingFactory.createBuilding(b, g);
+                ai.addBuilding(build);
+                ai.spendGold(build.getCost());
+                g.addCommentary("AI built " + b);
+                return;
             }
+        }
+
+        // Train
+        for (int i = 1; i <= 4; i++) {
+            Unit u = createUnitByChoice(i);
+            if (ai.hasBuilding(getRequiredBuilding(u)) && ai.getFood() >= u.getCost()) {
+                ai.trainUnit(u);
+                ai.spendFood(u.getCost());
+                g.addCommentary("AI trained " + u.getName());
+                return;
+            }
+        }
+
+        // Attack
+        Player enemy = (ai == player1) ? player2 : player1;
+        if (!ai.getUnits().isEmpty() && !enemy.getUnits().isEmpty()) {
+            Unit target = enemy.getUnits().get(0);
+            enemy.getUnits().remove(target);
+            ai.onEnemyUnitKilled(target);
+            g.addCommentary("AI killed " + target.getName());
         }
     }
 
-    // ===== STATIC HELPERS =====
+    // ================= HELPERS =================
     public static Unit createUnitByChoice(int choice) {
-        switch (choice) {
-            case 1: return new Soldier();
-            case 2: return new Archer();
-            case 3: return new Cavalry();
-            case 4: return new Wizard();
-            default: return null;
-        }
+        return switch (choice) {
+            case 1 -> new Soldier();
+            case 2 -> new Archer();
+            case 3 -> new Cavalry();
+            case 4 -> new Wizard();
+            default -> null;
+        };
     }
 
     public static String getRequiredBuilding(Unit u) {
-        if (u instanceof Archer) return "ArcheryRange";
         if (u instanceof Soldier) return "Barracks";
+        if (u instanceof Archer) return "ArcheryRange";
         if (u instanceof Cavalry) return "Stable";
         if (u instanceof Wizard) return "Magetower";
         return "";

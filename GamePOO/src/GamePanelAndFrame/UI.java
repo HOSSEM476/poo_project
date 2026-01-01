@@ -87,8 +87,9 @@ public class UI {
         g2.setColor(Color.WHITE); // Text color
         g2.setFont(g2.getFont().deriveFont(18f)); // Text size
 
-        int x = g.tileSize + 330; // Start X
-        int y = g.tileSize * 8 + 40; // Start Y
+        int x = g.tileSize + 200; // Start X
+        int y = g.tileSize
+        		; // Start Y
         int lineHeight = 24; // Space between lines
 
         // Split commentary into lines
@@ -181,7 +182,7 @@ public class UI {
         }
 
         // ---- AI UNITS ----
-        int xAI = g.screenWidth - g.tileSize * 6;
+        int xAI = g.tileSize+700;
         y = startY;
 
         g2.drawString("AI units:", xAI, y);
@@ -213,7 +214,7 @@ public class UI {
         }
 
         // ---- AI BUILDINGS ----
-        int xAI = g.screenWidth - g.tileSize * 7;
+        int xAI =  g.tileSize + 700;
         y = startY;
 
         g2.drawString("AI buildings:", xAI, y);
