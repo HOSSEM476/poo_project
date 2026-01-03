@@ -34,8 +34,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public Player p;
 
-    int gameState = 0;
-    int titelState = 1;
+     public int gameState = 0;
+    public int titelState = 1;
    int playState =2;
     Thread gameThread;
 	

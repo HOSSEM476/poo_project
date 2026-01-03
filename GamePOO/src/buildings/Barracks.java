@@ -7,7 +7,7 @@ public class Barracks extends Building {
     private String unitType;
     
     public Barracks(GamePanel g) {
-        super("Barrack", 1);
+        super("Barrack", 30);
         this.unitType = "Soldier";
     }
     

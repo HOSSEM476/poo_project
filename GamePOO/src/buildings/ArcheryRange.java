@@ -7,7 +7,7 @@ public class ArcheryRange extends Building {
     private String unitType;
 
     public ArcheryRange(GamePanel g) {
-        super("Archery Range", 20);
+        super("Archery Range", 40);
         this.unitType = "Archer";
     }
 

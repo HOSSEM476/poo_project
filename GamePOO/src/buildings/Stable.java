@@ -7,7 +7,7 @@ public class Stable extends Building {
     private String unitType;
 
     public Stable(GamePanel g) {
-        super("Stable", 180);
+        super("Stable", 70);
         this.unitType = "Cavalry";
     }
 

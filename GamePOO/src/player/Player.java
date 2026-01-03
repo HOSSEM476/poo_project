@@ -17,6 +17,8 @@ public class Player {
     private ResourceManager resourceManager; // Resource manager
     private int pts;                     // Points
     public boolean isAi;                 // AI flag
+    private int unitsTrainedThisTurn = 0;
+    private static final int MAX_UNITS_PER_TURN = 2;
 
     // Constructor
     public Player(boolean isAi, GamePanel g) {
@@ -31,8 +33,17 @@ public class Player {
     // ===== TURN START / END =====
     public void startTurn() {
         g.addCommentary((isAi ? "AI" : "Player") + "'s turn has started!");
+
+        unitsTrainedThisTurn = 0; // 🔥 reset limit
+
+        addGold(10);
+        addFood(10);
+        g.addCommentary((isAi ? "AI" : "Player") + " gained 10 Gold and 10 Food");
+
         collectResources();
     }
+
+
 
     public void endTurn() {
         g.addCommentary((isAi ? "AI" : "Player") + "'s turn has ended!");
@@ -42,33 +53,49 @@ public class Player {
     public void trainUnit(Unit unit) {
         if (unit == null) return;
 
-        // Check building requirement
-        String requiredBuilding = player.TurnManager.getRequiredBuilding(unit);
-        if (!hasBuilding(requiredBuilding)) {
-            g.addCommentary("Cannot train " + unit.getName() + "! Need " + requiredBuilding);
+        // Limit per turn
+        if (unitsTrainedThisTurn >= MAX_UNITS_PER_TURN) {
+            g.addCommentary("You can only train " + MAX_UNITS_PER_TURN + " units per turn");
             return;
         }
 
-        // Check food
+        // Required building check
+        String requiredBuilding = TurnManager.getRequiredBuilding(unit);
+        if (!hasBuilding(requiredBuilding)) {
+            g.addCommentary("Cannot train " + unit.getName() +
+                            "! Need " + requiredBuilding);
+            return;
+        }
+
+        // Food check
         if (getFood() < unit.getCost()) {
             g.addCommentary("Not enough food to train " + unit.getName());
             return;
         }
 
+        // Train unit
         units.add(unit);
         spendFood(unit.getCost());
-        g.addCommentary((isAi ? "AI" : "Player") + " trained " + unit.getName());
+        unitsTrainedThisTurn++;
+
+        g.addCommentary((isAi ? "AI" : "Player") +
+                " trained " + unit.getName() +
+                " (" + unitsTrainedThisTurn + "/" + MAX_UNITS_PER_TURN + ")");
     }
 
     public void attack(Unit attacker, Unit target) {
-        if (attacker != null && target != null) {
-            attacker.attack(target);
-            if (!target.isAlive()) {
-                removeUnit(target);
-                onEnemyUnitKilled(target);
-            }
+        if (attacker == null || target == null) return;
+
+        g.addCommentary(attacker.getType() + " attacks " + target.getType());
+
+        attacker.attack(target);
+
+        if (!target.isAlive()) {
+            removeUnit(target);
+            onEnemyUnitKilled(target);
         }
     }
+
 
     public void heal(Unit healer, Unit target) {
         if (healer != null && target != null) {
@@ -81,8 +108,13 @@ public class Player {
     }
 
     public void onEnemyUnitKilled(Unit enemy) {
-        pts += 1;
+    	pts += 1;
         g.addCommentary((isAi ? "AI" : "Player") + " killed " + enemy.getName() + "! Points: " + pts);
+
+        // ✅ Check win condition
+        if (g.turnManager.getCurrentPlayer().getPoints() >= 10) {
+            g.turnManager.endGame(isAi ? "AI" : "Player");
+        }
     }
 
     public List<Unit> getUnits() {

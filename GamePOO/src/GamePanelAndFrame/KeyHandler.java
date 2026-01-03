@@ -33,12 +33,10 @@ public class KeyHandler implements KeyListener {
         // ================= TITLE STATE =================
         if (g.gameState == g.titelState) {
 
-            if (key == KeyEvent.VK_UP) {
+            if (key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN) {
                 g.UI.CommandNum = (g.UI.CommandNum == 0) ? 1 : 0;
             }
-            if (key == KeyEvent.VK_DOWN) {
-                g.UI.CommandNum = (g.UI.CommandNum == 1) ? 0 : 1;
-            }
+
             if (key == KeyEvent.VK_ENTER) {
                 if (g.UI.CommandNum == 0) {
                     g.gameState = g.playState;
@@ -61,31 +59,35 @@ public class KeyHandler implements KeyListener {
         if (g.gameState != g.playState || t == null) return;
 
         Player current = t.getCurrentPlayer();
-        if (current.isAi()) return;
+        if (current.isAi()) return; // AI handled automatically
 
-        // -------- TRAIN --------
+        // ================= TRAIN UNITS =================
         if (t.isAwaitingUnitChoice()) {
+
             int choice = key - KeyEvent.VK_1 + 1;
             Unit u = TurnManager.createUnitByChoice(choice);
 
-            if (u != null) {
-                String req = TurnManager.getRequiredBuilding(u);
-                if (!current.hasBuilding(req)) {
-                    g.addCommentary("Need " + req);
-                } else if (current.getFood() < u.getCost()) {
-                    g.addCommentary("Not enough food");
-                } else {
-                    current.trainUnit(u);
-                    current.spendFood(u.getCost());
-                    g.addCommentary("You trained " + u.getName());
-                }
+            if (u == null) return;
+
+            String required = TurnManager.getRequiredBuilding(u);
+
+            if (!current.hasBuilding(required)) {
+                g.addCommentary("Need " + required);
             }
+            else if (current.getFood() < u.getCost()) {
+                g.addCommentary("Not enough food");
+            }
+            else {
+                current.trainUnit(u);
+            }
+
             t.showActionMenu();
             return;
         }
 
-        // -------- BUILD --------
+        // ================= BUILD =================
         if (t.isAwaitingBuildingChoice()) {
+
             Building b = switch (key) {
                 case KeyEvent.VK_1 -> BuildingFactory.createBuilding("Barracks", g);
                 case KeyEvent.VK_2 -> BuildingFactory.createBuilding("ArcheryRange", g);
@@ -94,30 +96,34 @@ public class KeyHandler implements KeyListener {
                 default -> null;
             };
 
-            if (b != null) {
-                if (current.getGold() >= b.getCost()) {
-                    current.addBuilding(b);
-                    current.spendGold(b.getCost());
-                    g.addCommentary("You built " + b.getClass().getSimpleName());
-                } else {
-                    g.addCommentary("Not enough gold");
-                }
+            if (b == null) return;
+
+            if (current.getGold() >= b.getCost()) {
+                current.addBuilding(b);
+                current.spendGold(b.getCost());
+            } else {
+                g.addCommentary("Not enough gold");
             }
+
             t.showActionMenu();
             return;
         }
 
-        // -------- ACTION MENU --------
+        // ================= ACTION MENU =================
         if (t.isAwaitingAction()) {
+
             switch (key) {
 
-                case KeyEvent.VK_1 -> { // ATTACK
+                // -------- ATTACK --------
+                case KeyEvent.VK_1 -> {
+
                     Player enemy = (current == t.player1) ? t.player2 : t.player1;
 
                     if (current.getUnits().isEmpty()) {
-                        g.addCommentary("No units to attack");
+                        g.addCommentary("No units to attack with");
                         return;
                     }
+
                     if (enemy.getUnits().isEmpty()) {
                         g.addCommentary("Enemy has no units");
                         return;
@@ -126,18 +132,14 @@ public class KeyHandler implements KeyListener {
                     Unit attacker = current.getUnits().get(0);
                     Unit target = enemy.getUnits().get(0);
 
-                    current.attack(attacker, target);
+                    current.attack(attacker, target); // ✅ SINGLE SOURCE OF COMBAT
+
                     g.addCommentary("You attacked " + target.getName());
 
-                    if (!target.isAlive()) {
-                        enemy.getUnits().remove(target);
-                        current.onEnemyUnitKilled(target);
-                        g.addCommentary("You killed " + target.getName());
-                    }
-
-                    t.nextTurn(); // attack ENDS turn
+                    t.nextTurn(); // attack ends turn
                 }
 
+                // -------- BUILD --------
                 case KeyEvent.VK_2 -> {
                     g.addCommentary("Build:");
                     g.addCommentary("1 Barracks | 2 Archery | 3 Stable | 4 Mage");
@@ -145,6 +147,7 @@ public class KeyHandler implements KeyListener {
                     t.setAwaitingBuildingChoice(true);
                 }
 
+                // -------- TRAIN --------
                 case KeyEvent.VK_3 -> {
                     g.addCommentary("Train:");
                     g.addCommentary("1 Soldier | 2 Archer | 3 Cavalry | 4 Wizard");
@@ -152,6 +155,7 @@ public class KeyHandler implements KeyListener {
                     t.setAwaitingUnitChoice(true);
                 }
 
+                // -------- END TURN --------
                 case KeyEvent.VK_ENTER -> t.nextTurn();
             }
         }

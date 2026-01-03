@@ -16,8 +16,7 @@ public class Cavalry extends Unit {
             damage = 0;
         }
 
-        // ❌ System.out.println removed
-        // ✅ Send message to in-game UI instead
+
         g.addCommentary(
             "Cavalry charges " + target.getType() +
             " for " + damage + " damage."

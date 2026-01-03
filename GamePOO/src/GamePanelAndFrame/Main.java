@@ -10,7 +10,7 @@ public class Main {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
-        window.setTitle("2D Adventure");
+        window.setTitle("SILENT TACTICS");
 
         // Create the main game panel
         GamePanel gamePanel = new GamePanel();

@@ -7,7 +7,7 @@ public class Magetower extends Building {
     private String unitType;
 
     public Magetower(GamePanel g) {
-        super("Mage Tower", 200);
+        super("Mage Tower", 90);
         this.unitType = "Mage";
     }
 

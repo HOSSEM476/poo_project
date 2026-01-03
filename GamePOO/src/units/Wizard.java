@@ -12,14 +12,12 @@ public class Wizard extends Unit {
     @Override
     public void attack(Unit target) {
         if (!target.isAlive()) {
-            // ❌ System.out.println
-            // ✅ UI commentary
+          
            g.addCommentary("Wizard cannot heal a dead unit.");
             return;
         }
         target.heal(HEAL_AMOUNT);
-        // ❌ System.out.println
-        // ✅ UI commentary
+       
         g.addCommentary(
             "Wizard heals " + target.getType() +
             " for " + HEAL_AMOUNT + " HP."

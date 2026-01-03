@@ -3,7 +3,7 @@ package buildings;
 public abstract class Building {
     
     protected String name;
-    protected int cost;
+    protected static int cost;
     
     public Building(String name, int cost) {
         this.name = name;
@@ -14,7 +14,7 @@ public abstract class Building {
         return name;
     }
     
-    public int getCost() {
+    public static int getCost() {
         return cost;
     }
     

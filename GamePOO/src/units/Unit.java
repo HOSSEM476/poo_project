@@ -35,10 +35,7 @@ public abstract class Unit {
     
     
 
-    // Drawing setup
-    public void setImage(BufferedImage image) {
-        this.image = image;
-    }
+  
 
     public void setPosition(int x, int y) {
         this.x = x;

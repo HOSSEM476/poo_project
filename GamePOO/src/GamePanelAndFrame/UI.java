@@ -37,8 +37,8 @@ public class UI {
     }
     
     public void drawTitelScreen() {
-    	String text =" 2D adventure";
-    	int x = getXforCenteredText(text);
+    	String text =" SILENT TACTICS     ";
+    	int x = getXforCenteredText(text)-40;
     	int y = g.tileSize *3;
     	g2.setFont(g2.getFont().deriveFont(Font.PLAIN,80F));
     	g2.setColor(Color.WHITE);

@@ -18,6 +18,19 @@ public class TurnManager {
     private boolean awaitingAction;
     private boolean awaitingUnitChoice;
     private boolean awaitingBuildingChoice;
+    private boolean gameOver = false;
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    void endGame(String winner) {
+        gameOver = true;
+        g.addCommentary("===== " + winner + " WINS! =====");
+        g.addCommentary("Press ENTER to return to the title screen.");
+
+        g.gameState = g.titelState;
+    }
 
     public TurnManager(Player player1, Player player2, GamePanel g) {
         this.player1 = player1;
@@ -40,6 +53,7 @@ public class TurnManager {
     public void setAwaitingBuildingChoice(boolean v) { awaitingBuildingChoice = v; }
 
     // ================= TURN FLOW =================
+  
     public void startTurn() {
         Player current = getCurrentPlayer();
         current.startTurn();
@@ -71,42 +85,61 @@ public class TurnManager {
         g.addCommentary("1 = Attack, 2 = Build, 3 = Train Units, ENTER = End Turn");
     }
 
-    // ================= AI LOGIC =================
+ // ================= AI LOGIC =================
     private void aiTakeAction(Player ai) {
+
+        g.addCommentary("---- AI TURN ----");
+
+        // Small income every AI turn
         ai.addGold(10);
         ai.addFood(10);
+        g.addCommentary("AI gained 10 Gold and 10 Food");
 
-        // Build priority
-        String[] buildings = {"Barracks", "ArcheryRange", "Stable", "Magetower"};
-        for (String b : buildings) {
-            if (!ai.hasBuilding(b) && ai.getGold() >= BuildingFactory.getBuildingCost(b)) {
-                Building build = BuildingFactory.createBuilding(b, g);
-                ai.addBuilding(build);
-                ai.spendGold(build.getCost());
-                g.addCommentary("AI built " + b);
-                return;
-            }
-        }
-
-        // Train
+        // ===== 1️⃣ TRAIN UNITS (highest priority if possible) =====
         for (int i = 1; i <= 4; i++) {
             Unit u = createUnitByChoice(i);
-            if (ai.hasBuilding(getRequiredBuilding(u)) && ai.getFood() >= u.getCost()) {
+            if (u == null) continue;
+
+            String requiredBuilding = getRequiredBuilding(u);
+            if (ai.hasBuilding(requiredBuilding) && ai.getFood() >= u.getCost()) {
                 ai.trainUnit(u);
                 ai.spendFood(u.getCost());
                 g.addCommentary("AI trained " + u.getName());
-                return;
+                return; // one action per turn
             }
         }
 
-        // Attack
+        // ===== 2️⃣ BUILD (if no training possible) =====
+        String[] buildings = {"Barracks", "ArcheryRange", "Stable", "Magetower"};
+        for (String b : buildings) {
+            if (!ai.hasBuilding(b) && ai.getGold() >= Building.getCost()) {
+                Building build = BuildingFactory.createBuilding(b, g);
+                ai.addBuilding(build);
+                ai.spendGold(Building.getCost());
+                g.addCommentary("AI built " + b);
+                return; // one action per turn
+            }
+        }
+
+        // ===== 3️⃣ ATTACK (if units available) =====
         Player enemy = (ai == player1) ? player2 : player1;
         if (!ai.getUnits().isEmpty() && !enemy.getUnits().isEmpty()) {
+            Unit attacker = ai.getUnits().get(0);
             Unit target = enemy.getUnits().get(0);
-            enemy.getUnits().remove(target);
-            ai.onEnemyUnitKilled(target);
-            g.addCommentary("AI killed " + target.getName());
+
+            attacker.attack(target);
+            g.addCommentary("AI attacked " + target.getName());
+
+            if (!target.isAlive()) {
+                enemy.getUnits().remove(target);
+                ai.onEnemyUnitKilled(target);
+                g.addCommentary("AI killed " + target.getName());
+            }
+            return;
         }
+
+        // ===== 4️⃣ NOTHING TO DO =====
+        g.addCommentary("AI ended its turn (no action possible)");
     }
 
     // ================= HELPERS =================
